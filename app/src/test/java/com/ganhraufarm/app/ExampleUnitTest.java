@@ -1,4 +1,4 @@
-package com.example.ganhraufarm;
+package com.ganhraufarm.app;
 
 import org.junit.Test;
 
