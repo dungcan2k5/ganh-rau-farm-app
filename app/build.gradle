@@ -50,8 +50,11 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.material
 
-    // OkHttp for Supabase REST API
+    // Networking: Retrofit & OkHttp
     implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.retrofit.gson
+    implementation libs.gson
     
     // Google Auth
     implementation libs.play.services.auth

@@ -11,7 +11,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ganhraufarm.app.api.RetrofitClient;
 import com.ganhraufarm.app.databinding.ActivityLoginBinding;
+import com.ganhraufarm.app.models.AuthRequest;
+import com.ganhraufarm.app.models.AuthResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -19,22 +22,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private GoogleSignInClient mGoogleSignInClient;
-    private final OkHttpClient httpClient = new OkHttpClient();
 
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -60,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         binding.btnGoogleLogin.setOnClickListener(v -> {
-            // Force account selection by signing out first
             mGoogleSignInClient.signOut().addOnCompleteListener(task -> signIn());
         });
     }
@@ -77,62 +70,33 @@ public class LoginActivity extends AppCompatActivity {
             exchangeTokenWithSupabase(idToken);
         } catch (ApiException e) {
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            Toast.makeText(this, "Lỗi đăng nhập Google: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Lỗi đăng nhập Google", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void exchangeTokenWithSupabase(String idToken) {
-        String url = SupabaseConfig.SUPABASE_URL + "/auth/v1/token?grant_type=id_token";
+        AuthRequest request = new AuthRequest("google", idToken);
         
-        JSONObject json = new JSONObject();
-        try {
-            json.put("provider", "google");
-            json.put("id_token", idToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(
-                json.toString(),
-                MediaType.parse("application/json; charset=utf-8")
-        );
-
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("apikey", SupabaseConfig.SUPABASE_ANON_KEY)
-                .post(body)
-                .build();
-
-        httpClient.newCall(request).enqueue(new Callback() {
+        RetrofitClient.getApi().exchangeToken(request).enqueue(new Callback<AuthResponse>() {
             @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Lỗi kết nối Supabase", Toast.LENGTH_SHORT).show());
+            public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    AuthResponse authResponse = response.body();
+                    saveSession(authResponse.getAccessToken(), authResponse.getUser().getId());
+
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    finish();
+                } else {
+                    Log.e(TAG, "Auth failed: " + response.code());
+                    Toast.makeText(LoginActivity.this, "Lỗi xác thực Supabase", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) {
-                if (response.isSuccessful()) {
-                    try {
-                        String responseData = response.body().string();
-                        JSONObject jsonResponse = new JSONObject(responseData);
-                        String accessToken = jsonResponse.getString("access_token");
-                        String userId = jsonResponse.getJSONObject("user").getString("id");
-
-                        saveSession(accessToken, userId);
-
-                        runOnUiThread(() -> {
-                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                            finish();
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Lỗi xử lý dữ liệu", Toast.LENGTH_SHORT).show());
-                    }
-                } else {
-                    Log.e(TAG, "Supabase error: " + response.code() + " " + response.message());
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Lỗi xác thực Supabase", Toast.LENGTH_SHORT).show());
-                }
+            public void onFailure(@NonNull Call<AuthResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, "Network error", t);
+                Toast.makeText(LoginActivity.this, "Lỗi kết nối server", Toast.LENGTH_SHORT).show();
             }
         });
     }
