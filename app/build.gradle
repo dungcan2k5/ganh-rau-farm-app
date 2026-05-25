@@ -4,20 +4,28 @@ plugins {
 
 android {
     namespace 'com.ganhraufarm.app'
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.ganhraufarm.app"
         minSdk 24
+        //noinspection OldTargetApi
         targetSdk 36
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Load properties from local.properties
+        Properties properties = new Properties()
+        File localPropertiesFile = project.rootProject.file('local.properties')
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.withInputStream { properties.load(it) }
+        }
+
+        buildConfigField "String", "SUPABASE_URL", "\"${properties.getProperty('SUPABASE_URL') ?: ""}\""
+        buildConfigField "String", "SUPABASE_ANON_KEY", "\"${properties.getProperty('SUPABASE_ANON_KEY') ?: ""}\""
+        buildConfigField "String", "GOOGLE_WEB_CLIENT_ID", "\"${properties.getProperty('GOOGLE_WEB_CLIENT_ID') ?: ""}\""
     }
 
     buildTypes {
@@ -26,6 +34,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -33,10 +46,16 @@ android {
 }
 
 dependencies {
-    implementation libs.activity.ktx
     implementation libs.appcompat
     implementation libs.constraintlayout
     implementation libs.material
+
+    // OkHttp for Supabase REST API
+    implementation libs.okhttp
+    
+    // Google Auth
+    implementation libs.play.services.auth
+
     testImplementation libs.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit
