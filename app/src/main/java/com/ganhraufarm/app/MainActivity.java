@@ -1,24 +1,37 @@
 package com.ganhraufarm.app;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+/**
+ * MainActivity đóng vai trò là một Router (Bộ điều hướng).
+ * Nhiệm vụ duy nhất là kiểm tra trạng thái đăng nhập từ SharedPreferences
+ * và chuyển hướng người dùng đến màn hình tương ứng.
+ */
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        Log.d(TAG, "Router Activity started");
+
+        SharedPreferences prefs = getSharedPreferences("ganh_rau_prefs", MODE_PRIVATE);
+        String token = prefs.getString("access_token", null);
+
+        if (token != null) {
+            Log.d(TAG, "User session found, redirecting to HomeActivity");
+            startActivity(new Intent(this, HomeActivity.class));
+        } else {
+            Log.d(TAG, "No user session, redirecting to LoginActivity");
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+
+        // Đóng MainActivity để người dùng không thể quay lại bằng nút Back
+        finish();
     }
 }
