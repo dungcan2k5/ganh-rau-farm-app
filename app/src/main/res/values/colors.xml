@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#008000</color>
     <color name="orange">#FF6600</color>
+    <color name="red_order">#FF4D2D</color>
+    <color name="nav_inactive">#757575</color>
 </resources>

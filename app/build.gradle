@@ -52,7 +52,10 @@ dependencies {
     implementation libs.material
     implementation libs.recyclerview
 
-    // OkHttp for Supabase REST API
+    // Networking & JSON
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.gson
     implementation libs.okhttp
     
     // Google Auth

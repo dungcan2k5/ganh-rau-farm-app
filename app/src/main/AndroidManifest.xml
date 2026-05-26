@@ -30,6 +30,18 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".CartActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CheckoutActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AccountActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

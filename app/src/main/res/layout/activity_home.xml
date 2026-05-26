@@ -1,14 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/green"
     tools:context=".MainActivity">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <LinearLayout
         android:id="@+id/bottom"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp">
+
+        <LinearLayout
+            android:id="@+id/nav_home_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_nav_home"
+                app:tint="@color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trang chủ"
+                android:textSize="10sp"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_category_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_nav_category"
+                app:tint="@color/nav_inactive" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Danh mục"
+                android:textSize="10sp"
+                android:textColor="@color/nav_inactive" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_support_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_nav_support"
+                app:tint="@color/nav_inactive" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hỗ trợ"
+                android:textSize="10sp"
+                android:textColor="@color/nav_inactive" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_cart_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_nav_cart"
+                app:tint="@color/nav_inactive" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giỏ hàng"
+                android:textSize="10sp"
+                android:textColor="@color/nav_inactive" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_order"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_order_button"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đặt mua"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0đ"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -29,6 +144,7 @@
                 android:text="Ganh Rau Farm"
                 android:textStyle="bold"
                 android:textColor="@color/white" />
+
             <LinearLayout
                 android:id="@+id/searchContainer"
                 android:layout_width="match_parent"
@@ -44,17 +160,23 @@
                     android:layout_width="0dp"
                     android:layout_height="39dp"
                     android:layout_weight="1"
+                    android:queryHint="Tìm sản phẩm"
+                    android:iconifiedByDefault="false"
                     android:background="@color/white" />
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btnAccount"
                     android:layout_width="41dp"
                     android:layout_height="41dp"
                     android:layout_marginLeft="25dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp">
 
                     <ImageView
-                        android:id="@+id/imageView"
+                        android:id="@+id/imageViewAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
@@ -68,9 +190,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:text="Danh mục sản phẩm"
-                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_below="@id/searchContainer"/>
@@ -89,9 +210,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:text="Mã ưu đãi"
-                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:text="Mã giảm giá"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_below="@id/recyclerView1"/>
@@ -110,9 +230,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:text="Gợi ý hôm nay"
-                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_below="@id/recyclerView2"/>
@@ -120,7 +239,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView3"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="290dp"
                 android:layout_below="@id/textView3"
                 android:layout_marginTop="10dp" />
 
