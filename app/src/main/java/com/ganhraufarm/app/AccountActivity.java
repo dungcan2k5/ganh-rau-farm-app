@@ -10,21 +10,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.ganhraufarm.app.api.RetrofitClient;
+import com.ganhraufarm.app.models.UserProfile;
 
-import java.io.IOException;
+import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AccountActivity extends AppCompatActivity {
     private static final String TAG = "AccountActivity";
     private TextView tvUserName, tvUserEmail, tvUserPhone, tvUserAddress;
-    private final OkHttpClient httpClient = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,54 +48,37 @@ public class AccountActivity extends AppCompatActivity {
         String userId = prefs.getString("user_id", null);
 
         if (token != null && userId != null) {
-            fetchUserProfile(token, userId);
+            RetrofitClient.setAuthToken(token);
+            fetchUserProfile(userId);
         } else {
             handleLogout();
         }
     }
 
-    private void fetchUserProfile(String token, String userId) {
-        // Querying "users" table in Supabase
-        String url = SupabaseConfig.SUPABASE_URL + "/rest/v1/users?select=*&id=eq." + userId;
-
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("apikey", SupabaseConfig.SUPABASE_ANON_KEY)
-                .addHeader("Authorization", "Bearer " + token)
-                .get()
-                .build();
-
-        httpClient.newCall(request).enqueue(new Callback() {
+    private void fetchUserProfile(String userId) {
+        RetrofitClient.getApi().getUserProfile("eq." + userId, "*").enqueue(new Callback<List<UserProfile>>() {
             @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                runOnUiThread(() -> Toast.makeText(AccountActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show());
+            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    displayData(response.body().get(0));
+                } else {
+                    Toast.makeText(AccountActivity.this, "Không thể tải hồ sơ", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        String responseData = response.body().string();
-                        JSONArray jsonArray = new JSONArray(responseData);
-                        if (jsonArray.length() > 0) {
-                            JSONObject profile = jsonArray.getJSONObject(0);
-                            runOnUiThread(() -> displayData(profile));
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error parsing profile", e);
-                    }
-                } else {
-                    runOnUiThread(() -> Toast.makeText(AccountActivity.this, "Không thể tải hồ sơ", Toast.LENGTH_SHORT).show());
-                }
+            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
+                Log.e(TAG, "Fetch failed", t);
+                Toast.makeText(AccountActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void displayData(JSONObject obj) {
-        tvUserName.setText(obj.optString("full_name", "N/A"));
-        tvUserEmail.setText(obj.optString("email", "N/A"));
-        tvUserPhone.setText(obj.optString("phone", "Chưa cập nhật"));
-        tvUserAddress.setText(obj.optString("address", "Chưa cập nhật"));
+    private void displayData(UserProfile profile) {
+        tvUserName.setText(profile.getFullName() != null ? profile.getFullName() : "N/A");
+        tvUserEmail.setText(profile.getEmail() != null ? profile.getEmail() : "N/A");
+        tvUserPhone.setText(profile.getPhone() != null ? profile.getPhone() : "Chưa cập nhật");
+        tvUserAddress.setText(profile.getAddress() != null ? profile.getAddress() : "Chưa cập nhật");
     }
 
     private void handleLogout() {
