@@ -10,23 +10,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ganhraufarm.app.api.RetrofitClient;
 import com.ganhraufarm.app.databinding.ActivityHomeBinding;
+import com.ganhraufarm.app.models.UserProfile;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
     private ActivityHomeBinding binding;
-    private final OkHttpClient httpClient = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,60 +35,45 @@ public class HomeActivity extends AppCompatActivity {
         String userId = prefs.getString("user_id", null);
 
         if (token != null && userId != null) {
-            fetchUserProfile(token, userId);
+            RetrofitClient.setAuthToken(token);
+            fetchUserProfile(userId);
         } else {
             handleLogout();
         }
 
-        binding.navCartContainer.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
-
-        binding.btnAccount.setOnClickListener(v -> startActivity(new Intent(this, AccountActivity.class)));
-
-        // binding.btnLogout is removed from Home, logout is now in AccountActivity
+        binding.btnLogout.setOnClickListener(v -> handleLogout());
     }
 
-    private void fetchUserProfile(String token, String userId) {
-        Log.d(TAG, "Fetching profile for user: " + userId);
-        String url = SupabaseConfig.SUPABASE_URL + "/rest/v1/users?select=*&id=eq." + userId;
-
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("apikey", SupabaseConfig.SUPABASE_ANON_KEY)
-                .addHeader("Authorization", "Bearer " + token)
-                .get()
-                .build();
-
-        httpClient.newCall(request).enqueue(new Callback() {
+    private void fetchUserProfile(String userId) {
+        RetrofitClient.getApi().getUserProfile("eq." + userId, "*").enqueue(new Callback<List<UserProfile>>() {
             @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                runOnUiThread(() -> {
-                    Toast.makeText(HomeActivity.this, "Lỗi kết nối server", Toast.LENGTH_SHORT).show();
-                });
+            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
+                binding.progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    displayData(response.body().get(0));
+                } else {
+                    Log.e(TAG, "Profile fetch failed: " + response.code());
+                    Toast.makeText(HomeActivity.this, "Không tìm thấy hồ sơ", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        String responseData = response.body().string();
-                        Log.d(TAG, "Profile response: " + responseData);
-                        JSONArray jsonArray = new JSONArray(responseData);
-                        if (jsonArray.length() > 0) {
-                            JSONObject profile = jsonArray.getJSONObject(0);
-                            runOnUiThread(() -> displayData(profile));
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error parsing profile", e);
-                    }
-                }
+            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
+                binding.progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "Network error", t);
+                Toast.makeText(HomeActivity.this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void displayData(JSONObject obj) {
-        // Updated to reflect activity_home.xml which doesn't have these specific tv fields anymore
-        // or uses different ones in the search view avatar
-        Log.d(TAG, "Profile data received: " + obj.toString());
+    private void displayData(UserProfile profile) {
+        binding.layoutContent.setVisibility(View.VISIBLE);
+        
+        binding.tvFullName.setText(profile.getFullName() != null ? profile.getFullName() : "Chưa cập nhật");
+        binding.tvEmail.setText(profile.getEmail() != null ? profile.getEmail() : "N/A");
+        binding.tvPhone.setText(profile.getPhone() != null ? profile.getPhone() : "Chưa cập nhật");
+        binding.tvAddress.setText(profile.getAddress() != null ? profile.getAddress() : "Chưa cập nhật");
+        binding.tvRole.setText(profile.getRole() != null ? profile.getRole() : "customer");
     }
 
     private void handleLogout() {

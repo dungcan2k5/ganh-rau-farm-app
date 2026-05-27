@@ -48,15 +48,13 @@ android {
 dependencies {
     implementation libs.appcompat
     implementation libs.constraintlayout
-    implementation libs.gridlayout
     implementation libs.material
-    implementation libs.recyclerview
 
-    // Networking & JSON
-    implementation libs.retrofit
-    implementation libs.converter.gson
-    implementation libs.gson
+    // Networking: Retrofit & OkHttp
     implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.retrofit.gson
+    implementation libs.gson
     
     // Google Auth
     implementation libs.play.services.auth
