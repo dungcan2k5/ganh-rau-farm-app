@@ -59,6 +59,10 @@ dependencies {
     // Google Auth
     implementation libs.play.services.auth
 
+    // Glide for Image Loading
+    implementation libs.glide
+    annotationProcessor libs.glide.compiler
+
     testImplementation libs.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit

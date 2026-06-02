@@ -33,7 +33,7 @@
         android:maxLines="2"
         android:text="Rau Củ Quả"
         android:textStyle="bold"
-        android:textColor="#333333"
+        android:textColor="@color/black"
         android:textSize="12sp" />
 
 </LinearLayout>
