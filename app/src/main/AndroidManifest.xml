@@ -42,6 +42,14 @@
         <activity
             android:name=".AccountActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".OrderDetailActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

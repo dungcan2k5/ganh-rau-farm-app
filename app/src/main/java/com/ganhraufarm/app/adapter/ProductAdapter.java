@@ -1,5 +1,6 @@
 package com.ganhraufarm.app.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ganhraufarm.app.ProductDetailActivity;
 import com.ganhraufarm.app.R;
 import com.ganhraufarm.app.models.Product;
 
@@ -43,6 +45,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 .load(product.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.ivImage);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
+            intent.putExtra("PRODUCT_ID", product.getId());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

@@ -33,6 +33,15 @@ public class Product {
     @SerializedName("category")
     private String category;
 
+    @SerializedName("categories")
+    private CategoryNested categoryNested;
+
+    public static class CategoryNested {
+        @SerializedName("name")
+        private String name;
+        public String getName() { return name; }
+    }
+
     @SerializedName("shop_name")
     private String shopName;
 
@@ -51,7 +60,10 @@ public class Product {
     public String getImageUrl() { return imageUrl; }
     public String getUnit() { return unit; }
     public boolean isActive() { return isActive; }
-    public String getCategory() { return category; }
+    public String getCategory() { 
+        if (categoryNested != null) return categoryNested.getName();
+        return category; 
+    }
     public String getShopName() { return shopName; }
     public float getRating() { return rating; }
     public Double getOldPrice() { return oldPrice; }

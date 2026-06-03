@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.ganhraufarm.app.api.RetrofitClient;
 import com.ganhraufarm.app.databinding.ChiTietSanPhamBinding;
 import com.ganhraufarm.app.models.Product;
@@ -39,7 +40,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void fetchProductDetails(int id) {
-        RetrofitClient.getApi().getProductById("eq." + id, "*").enqueue(new Callback<List<Product>>() {
+        // Sử dụng select=*,categories(name) để lấy thông tin category từ bảng categories
+        RetrofitClient.getApi().getProductById("eq." + id, "*,categories(name)").enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(@NonNull Call<List<Product>> call, @NonNull Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
@@ -58,22 +60,26 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void displayProduct(Product product) {
         binding.tvDetailName.setText(product.getName());
-        binding.tvDetailCategory.setText(product.getCategory());
-        binding.tvShopName.setText("Shop: " + product.getShopName());
-        binding.tvRating.setText(String.valueOf(product.getRating()));
-//        binding.tvRatingCount.setText("(" + product.getRatingCount() + " đánh giá)");
+        binding.tvDetailCategory.setText(product.getCategory() != null ? product.getCategory().toUpperCase() : "SẢN PHẨM");
         binding.tvDetailPrice.setText(String.format("%,.0fđ", product.getPrice()));
-        
-        if (product.getOldPrice() != null) {
-            binding.tvDetailOldPrice.setVisibility(View.VISIBLE);
-            binding.tvDetailOldPrice.setText(String.format("%,.0fđ", product.getOldPrice()));
-        } else {
-            binding.tvDetailOldPrice.setVisibility(View.GONE);
-        }
+
+        // Hiển thị số lượng tồn kho
+        binding.tvDetailStock.setText("Kho: " + product.getStock());
 
         binding.tvDetailDescription.setText(product.getDescription());
-        
-        // Note: For actual image loading, you would use Glide or Picasso
-        // Glide.with(this).load(product.getImageUrl()).into(binding.ivProductLarge);
+
+        Glide.with(this)
+                .load(product.getImageUrl())
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(binding.ivProductLarge);
+
+        // Click listeners cho các nút chức năng (Placeholder)
+        binding.btnAddToCartDetail.setOnClickListener(v -> {
+            Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        });
+
+        binding.btnBuyNow.setOnClickListener(v -> {
+            Toast.makeText(this, "Chức năng mua ngay đang phát triển", Toast.LENGTH_SHORT).show();
+        });
     }
 }
