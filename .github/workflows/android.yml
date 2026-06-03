@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./dungcan2k5/ganh-rau-farm-app/ganh-rau-farm-app-dev
+        working-directory: .
 
     steps:
       - name: Checkout code
