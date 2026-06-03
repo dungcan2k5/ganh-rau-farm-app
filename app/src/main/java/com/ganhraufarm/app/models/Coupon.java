@@ -18,6 +18,9 @@ public class Coupon {
     @SerializedName("min_order_value")
     private double minOrderValue;
     
+    @SerializedName("usage_limit")
+    private int usageLimit;
+
     @SerializedName("valid_until")
     private String validUntil;
     
@@ -29,6 +32,7 @@ public class Coupon {
     public String getDiscountType() { return discountType; }
     public double getDiscountValue() { return discountValue; }
     public double getMinOrderValue() { return minOrderValue; }
+    public int getUsageLimit() { return usageLimit; }
     public String getValidUntil() { return validUntil; }
     public boolean isActive() { return isActive; }
 }

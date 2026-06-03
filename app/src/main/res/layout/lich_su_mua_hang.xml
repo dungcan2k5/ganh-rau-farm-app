@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHistory"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="75dp"
         android:background="@android:color/white"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,14 +21,16 @@
                 android:id="@+id/btnBack"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_revert"
                 app:tint="@android:color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="33dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@id/btnBack"
                 android:text="Lịch sử mua hàng"
@@ -36,28 +38,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/btnSearchHistory"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@android:color/black" />
-
-                <ImageButton
-                    android:id="@+id/btnChat"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@android:color/black" />
-            </LinearLayout>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -79,12 +59,27 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chờ giao hàng" />
+            android:text="Chờ xử lý" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đang xử lý" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đang giao" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đã giao" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hoàn thành" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

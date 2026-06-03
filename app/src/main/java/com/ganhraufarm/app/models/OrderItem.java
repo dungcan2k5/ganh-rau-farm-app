@@ -15,7 +15,7 @@ public class OrderItem {
     @SerializedName("quantity")
     private int quantity;
 
-    @SerializedName("price")
+    @SerializedName("price_at_purchase")
     private double price;
 
     // Optional: Include product details directly if Supabase query uses joins

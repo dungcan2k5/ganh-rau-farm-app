@@ -1,5 +1,6 @@
 package com.ganhraufarm.app.adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,41 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orders.get(position);
         
-        holder.tvShopName.setText("Gánh Rau Farm"); // Hardcoded as per design or fetch from order if available
-        holder.tvOrderStatus.setText(order.getStatus());
+        holder.tvShopName.setText("Gánh Rau Farm");
+        
+        String status = order.getStatus();
+        if (status == null) status = "";
+        
+        switch (status.toLowerCase()) {
+            case "pending":
+                holder.tvOrderStatus.setText("Chờ xử lý");
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#F57C00")); // Orange
+                break;
+            case "processing":
+                holder.tvOrderStatus.setText("Đang xử lý");
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#1976D2")); // Blue
+                break;
+            case "shipped":
+                holder.tvOrderStatus.setText("Đang giao hàng");
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#00796B")); // Teal
+                break;
+            case "delivered":
+                holder.tvOrderStatus.setText("Đã giao hàng");
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#303F9F")); // Indigo
+                break;
+            case "completed":
+                holder.tvOrderStatus.setText("Hoàn thành");
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#388E3C")); // Green
+                break;
+            case "cancelled":
+                holder.tvOrderStatus.setText("Đã hủy");
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#D32F2F")); // Red
+                break;
+            default:
+                holder.tvOrderStatus.setText(status);
+                holder.tvOrderStatus.setTextColor(Color.BLACK);
+                break;
+        }
         
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         holder.tvOrderTotal.setText(formatter.format(order.getTotalAmount()) + "đ");
@@ -53,7 +87,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             OrderItem firstItem = order.getItems().get(0);
             if (firstItem.getProduct() != null) {
                 holder.tvProductName.setText(firstItem.getProduct().getName());
-                holder.tvProductPrice.setText(formatter.format(firstItem.getPrice()) + "đ");
+                
+                // Use price_at_purchase from OrderItem if available, else fallback to current product price
+                double displayPrice = firstItem.getPrice();
+                holder.tvProductPrice.setText(formatter.format(displayPrice) + "đ");
                 holder.tvProductQuantity.setText("x" + firstItem.getQuantity());
                 
                 Glide.with(holder.itemView.getContext())

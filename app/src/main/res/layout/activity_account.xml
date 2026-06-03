@@ -115,12 +115,24 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Số điện thoại"
-                        android:textColor="@color/nav_inactive"
-                        android:textSize="12sp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Số điện thoại"
+                            android:textColor="@color/nav_inactive"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/btnEditPhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="Chỉnh sửa"
+                            android:textColor="#3B82F6"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tvUserPhone"
@@ -138,12 +150,24 @@
                         android:layout_marginBottom="12dp"
                         android:background="#EEEEEE" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Địa chỉ"
-                        android:textColor="@color/nav_inactive"
-                        android:textSize="12sp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Địa chỉ"
+                            android:textColor="@color/nav_inactive"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/btnEditAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="Chỉnh sửa"
+                            android:textColor="#3B82F6"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tvUserAddress"
@@ -155,6 +179,51 @@
                         android:textSize="16sp" />
 
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Order History Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardOrderHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="1dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/ivOrderIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@android:drawable/ic_menu_agenda"
+                        app:tint="#4CAF50" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_toEndOf="@id/ivOrderIcon"
+                        android:text="Lịch sử mua hàng"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:srcCompat="@android:drawable/ic_media_play"
+                        app:tint="@color/nav_inactive" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
             <Button

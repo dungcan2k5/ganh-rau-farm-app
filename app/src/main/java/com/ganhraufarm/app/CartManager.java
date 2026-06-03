@@ -109,6 +109,27 @@ public class CartManager {
         return count;
     }
 
+    public List<CartItem> getSelectedItems() {
+        List<CartItem> selectedItems = new ArrayList<>();
+        for (CartItem item : cartList) {
+            if (item.isSelected()) {
+                selectedItems.add(item);
+            }
+        }
+        return selectedItems;
+    }
+
+    public void removeSelectedItems() {
+        List<CartItem> remainingItems = new ArrayList<>();
+        for (CartItem item : cartList) {
+            if (!item.isSelected()) {
+                remainingItems.add(item);
+            }
+        }
+        cartList = remainingItems;
+        saveCart();
+    }
+
     public void clearCart() {
         cartList.clear();
         saveCart();

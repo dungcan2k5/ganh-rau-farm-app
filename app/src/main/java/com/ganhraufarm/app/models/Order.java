@@ -25,6 +25,15 @@ public class Order {
     @SerializedName("payment_method")
     private String paymentMethod;
 
+    @SerializedName("shipping_address")
+    private String shippingAddress;
+
+    @SerializedName("receiver_phone")
+    private String receiverPhone;
+
+    @SerializedName("final_amount")
+    private double finalAmount;
+
     private List<OrderItem> items;
 
     // Getters and Setters
@@ -40,6 +49,9 @@ public class Order {
     public double getTotalAmount() { return totalAmount; }
     public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
 
+    public double getFinalAmount() { return finalAmount; }
+    public void setFinalAmount(double finalAmount) { this.finalAmount = finalAmount; }
+
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 
@@ -48,6 +60,12 @@ public class Order {
 
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+
+    public String getShippingAddress() { return shippingAddress; }
+    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+
+    public String getReceiverPhone() { return receiverPhone; }
+    public void setReceiverPhone(String receiverPhone) { this.receiverPhone = receiverPhone; }
 
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }

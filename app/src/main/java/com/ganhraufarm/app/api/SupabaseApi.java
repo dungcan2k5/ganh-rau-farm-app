@@ -11,6 +11,7 @@ import com.ganhraufarm.app.models.Order;
 import com.ganhraufarm.app.models.Product;
 import com.ganhraufarm.app.models.UserProfile;
 
+import com.ganhraufarm.app.models.SyncCartRequest;
 import java.util.List;
 
 import retrofit2.Call;
@@ -26,6 +27,9 @@ public interface SupabaseApi {
 
     @GET("rest/v1/users")
     Call<List<UserProfile>> getUserProfile(@Query("id") String idFilter, @Query("select") String select);
+
+    @retrofit2.http.PATCH("rest/v1/users")
+    Call<Void> updateUserProfile(@Query("id") String idFilter, @Body java.util.Map<String, Object> updates);
 
     @GET("rest/v1/categories")
     Call<List<Category>> getCategories(@Query("select") String select);
@@ -48,6 +52,15 @@ public interface SupabaseApi {
     @GET("rest/v1/coupons")
     Call<List<Coupon>> getCoupons(@Query("select") String select, @Query("is_active") String activeFilter);
 
+    @retrofit2.http.PATCH("rest/v1/coupons")
+    Call<Void> updateCoupon(@Query("code") String codeFilter, @Body java.util.Map<String, Object> updates);
+
     @POST("functions/v1/process-payment")
     Call<CheckoutResponse> processPayment(@Body CheckoutRequest request);
+
+    @POST("rest/v1/cart_items")
+    Call<Void> syncCartItems(@Body List<SyncCartRequest.CartItemBody> items);
+
+    @retrofit2.http.DELETE("rest/v1/cart_items")
+    Call<Void> clearCartItems(@Query("user_id") String userIdFilter);
 }

@@ -7,235 +7,282 @@
     android:background="#F5F5F5">
 
     <!-- Header -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        app:elevation="0dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="2dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:padding="12dp"
+            app:srcCompat="@android:drawable/ic_menu_revert"
+            app:tint="@color/black" />
 
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Quay lại"
-                app:tint="@android:color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Xác nhận đơn hàng"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Chi tiết đơn hàng"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomBar"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+        android:layout_height="match_parent"
+        android:layout_above="@id/layoutBottomStatus"
+        android:layout_below="@id/header">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
-            <!-- Address Section -->
+            <!-- Section: Order Info -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Địa chỉ nhận hàng"
-                        android:textColor="@android:color/black"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/btnChangeAddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:text="Thay đổi"
-                        android:textColor="#007AFF" />
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/tvOrderDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/nav_inactive"
+                    android:textSize="12sp"
+                    tools:text="Ngày đặt: 04/06/2026 01:23" />
 
                 <TextView
-                    android:id="@+id/tvRecipientNamePhone"
+                    android:id="@+id/tvOrderId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="Mã đơn hàng: #12345" />
+            </LinearLayout>
+
+            <!-- Section: Receiving Info -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="THÔNG TIN NHẬN HÀNG"
+                    android:textColor="@color/nav_inactive"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvReceiverName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    tools:text="Tên người nhận | Số điện thoại" />
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    tools:text="Người nhận: Nguyễn Văn A" />
 
                 <TextView
-                    android:id="@+id/tvDetailedAddress"
+                    android:id="@+id/tvReceiverPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="13sp"
-                    tools:text="Địa chỉ chi tiết..." />
-            </LinearLayout>
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    tools:text="Số điện thoại: 0123456789" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F0F0F0" />
-
-            <!-- Product Items List -->
-            <LinearLayout
-                android:id="@+id/layoutProductList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvProducts"
+                <TextView
+                    android:id="@+id/tvAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/item_order_product" />
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    tools:text="Địa chỉ: 123 Đường ABC, Quận XYZ, TP. HCM" />
             </LinearLayout>
 
-            <!-- Gift Section -->
+            <!-- Section: Items -->
+            <LinearLayout
+                android:id="@+id/layoutItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="16dp" />
+
+            <!-- Section: Payment Method -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@android:color/white"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quà tặng kèm (0đ)"
-                    android:textColor="#4CAF50"
+                    android:text="PHƯƠNG THỨC THANH TOÁN"
+                    android:textColor="@color/nav_inactive"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvPaymentMethod"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    tools:text="Thanh toán khi nhận hàng (COD)" />
+            </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/ivGift"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="#F5F5F5"
-                        android:scaleType="centerInside" />
+            <!-- Section: Bill Detail -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="16dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CHI TIẾT THANH TOÁN"
+                    android:textColor="@color/nav_inactive"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp">
                     <TextView
-                        android:id="@+id/tvGiftName"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp"
-                        tools:text="[Tặng] Tên quà tặng" />
-                </LinearLayout>
-            </LinearLayout>
+                        android:text="Tiền hàng"
+                        android:textColor="@color/nav_inactive" />
+                    <TextView
+                        android:id="@+id/tvBillSubtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="@color/black"
+                        tools:text="100.000đ" />
+                </RelativeLayout>
 
-            <!-- Upsell Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:paddingVertical="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="TIỆN TAY MUA DÙNG"
-                    android:textColor="@android:color/black"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvUpsell"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="12dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_product_upsell_small" />
-            </LinearLayout>
+                    android:layout_marginTop="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phí giao hàng"
+                        android:textColor="@color/nav_inactive" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="Miễn phí"
+                        android:textColor="#10B981" />
+                </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/layoutDiscount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giảm giá"
+                        android:textColor="@color/nav_inactive" />
+                    <TextView
+                        android:id="@+id/tvDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="@color/red_order"
+                        tools:text="-10.000đ" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:background="#EEEEEE" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tổng thanh toán"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvBillTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="@color/red_order"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="90.000đ" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Bar -->
-    <LinearLayout
-        android:id="@+id/bottomBar"
+    <!-- Bottom Status Bar -->
+    <RelativeLayout
+        android:id="@+id/layoutBottomStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
         android:elevation="8dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        tools:ignore="MissingConstraints" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tổng thanh toán"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tvTotalPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#E53935"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="0đ" />
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnOrder"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#4CAF50"
-            android:paddingHorizontal="32dp"
-            android:text="Đặt hàng"
-            android:textAllCaps="false"
-            app:cornerRadius="8dp" />
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            android:text="Trạng thái đơn hàng"
+            android:textColor="@color/nav_inactive"
+            android:textSize="14sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvOrderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/green"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Hoàn thành" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
