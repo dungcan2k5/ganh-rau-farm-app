@@ -2,7 +2,6 @@ package com.ganhraufarm.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,16 +18,18 @@ import com.ganhraufarm.app.models.Order;
 import com.ganhraufarm.app.models.OrderItem;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
-    private static final String TAG = "OrderDetailActivity";
-    private TextView tvOrderDate, tvOrderId, tvReceiverName, tvReceiverPhone, tvAddress;
+    private TextView tvOrderDate, tvOrderId, tvReceiverPhone, tvAddress;
     private TextView tvPaymentMethod, tvBillSubtotal, tvBillTotal, tvDiscount, tvOrderStatus;
     private LinearLayout layoutItems;
     private View layoutDiscount;
@@ -53,7 +54,6 @@ public class OrderDetailActivity extends AppCompatActivity {
     private void initViews() {
         tvOrderDate = findViewById(R.id.tvOrderDate);
         tvOrderId = findViewById(R.id.tvOrderId);
-        tvReceiverName = findViewById(R.id.tvReceiverName);
         tvReceiverPhone = findViewById(R.id.tvReceiverPhone);
         tvAddress = findViewById(R.id.tvAddress);
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
@@ -82,7 +82,6 @@ public class OrderDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<List<Order>> call, @NonNull Throwable t) {
-                Log.e(TAG, "Fetch failed", t);
                 Toast.makeText(OrderDetailActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
@@ -92,7 +91,22 @@ public class OrderDetailActivity extends AppCompatActivity {
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         
         tvOrderId.setText("Mã đơn hàng: #" + order.getId());
-        tvOrderDate.setText("Ngày đặt: " + order.getCreatedAt()); 
+        
+        // Format and display Order Date
+        if (order.getCreatedAt() != null) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+                inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date date = inputFormat.parse(order.getCreatedAt());
+                
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                if (date != null) {
+                    tvOrderDate.setText("Ngày đặt: " + outputFormat.format(date));
+                }
+            } catch (Exception e) {
+                tvOrderDate.setText("Ngày đặt: " + order.getCreatedAt());
+            }
+        }
         
         // Receiver Info
         tvAddress.setText("Địa chỉ: " + (order.getShippingAddress() != null ? order.getShippingAddress() : "N/A"));

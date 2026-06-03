@@ -76,44 +76,27 @@ public class OrderHistoryActivity extends AppCompatActivity {
     }
 
     private void fetchOrderHistory(String userId) {
-        Log.d(TAG, "Fetching order history for userId: " + userId);
-        
-        // Query orders with items and products
-        // Mapping 'items' alias to 'order_items' table for Supabase/PostgREST join
-        RetrofitClient.getApi().getOrders("eq." + userId, "*,items:order_items(*,product:products(*))")
+        // Query orders with items and products, explicitly passing sort order
+        RetrofitClient.getApi().getOrders("eq." + userId, "*,items:order_items(*,product:products(*))", "created_at.desc")
                 .enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(@NonNull Call<List<Order>> call, @NonNull Response<List<Order>> response) {
-                Log.d(TAG, "API URL: " + call.request().url());
-                Log.d(TAG, "Response Code: " + response.code());
-
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Order> fetchedOrders = response.body();
-                    Log.d(TAG, "Fetched " + fetchedOrders.size() + " orders");
-                    
-                    for (Order order : fetchedOrders) {
-                        Log.d(TAG, "Order #" + order.getId() + " - Status: " + order.getStatus());
-                        if (order.getItems() != null) {
-                            Log.d(TAG, "  Items: " + order.getItems().size());
-                        }
-                    }
-
                     allOrders.clear();
-                    allOrders.addAll(fetchedOrders);
+                    allOrders.addAll(response.body());
+                    
+                    // Client-side sort fallback to be absolutely sure
+                    allOrders.sort((o1, o2) -> {
+                        if (o1.getCreatedAt() == null || o2.getCreatedAt() == null) return 0;
+                        return o2.getCreatedAt().compareTo(o1.getCreatedAt());
+                    });
+
                     filterOrders(binding.tabLayout.getSelectedTabPosition());
-                } else {
-                    try {
-                        String error = response.errorBody() != null ? response.errorBody().string() : "No error body";
-                        Log.e(TAG, "API Error: " + error);
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error logging failure", e);
-                    }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Order>> call, @NonNull Throwable t) {
-                Log.e(TAG, "Network Failure", t);
                 Toast.makeText(OrderHistoryActivity.this, "Lỗi tải lịch sử", Toast.LENGTH_SHORT).show();
             }
         });

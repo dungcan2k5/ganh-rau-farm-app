@@ -44,7 +44,7 @@ public interface SupabaseApi {
     Call<List<Address>> getAddresses(@Query("user_id") String userIdFilter, @Query("select") String select);
 
     @GET("rest/v1/orders")
-    Call<List<Order>> getOrders(@Query("user_id") String userIdFilter, @Query("select") String select);
+    Call<List<Order>> getOrders(@Query("user_id") String userIdFilter, @Query("select") String select, @Query("order") String orderSort);
 
     @GET("rest/v1/orders")
     Call<List<Order>> getOrderDetails(@Query("id") String idFilter, @Query("select") String select);

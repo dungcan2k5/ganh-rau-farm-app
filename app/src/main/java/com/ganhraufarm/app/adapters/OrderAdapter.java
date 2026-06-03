@@ -16,8 +16,11 @@ import com.ganhraufarm.app.models.Order;
 import com.ganhraufarm.app.models.OrderItem;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
 
@@ -52,27 +55,27 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         switch (status.toLowerCase()) {
             case "pending":
                 holder.tvOrderStatus.setText("Chờ xử lý");
-                holder.tvOrderStatus.setTextColor(Color.parseColor("#F57C00")); // Orange
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#F57C00"));
                 break;
             case "processing":
                 holder.tvOrderStatus.setText("Đang xử lý");
-                holder.tvOrderStatus.setTextColor(Color.parseColor("#1976D2")); // Blue
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#1976D2"));
                 break;
             case "shipped":
                 holder.tvOrderStatus.setText("Đang giao hàng");
-                holder.tvOrderStatus.setTextColor(Color.parseColor("#00796B")); // Teal
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#00796B"));
                 break;
             case "delivered":
                 holder.tvOrderStatus.setText("Đã giao hàng");
-                holder.tvOrderStatus.setTextColor(Color.parseColor("#303F9F")); // Indigo
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#303F9F"));
                 break;
             case "completed":
                 holder.tvOrderStatus.setText("Hoàn thành");
-                holder.tvOrderStatus.setTextColor(Color.parseColor("#388E3C")); // Green
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#388E3C"));
                 break;
             case "cancelled":
                 holder.tvOrderStatus.setText("Đã hủy");
-                holder.tvOrderStatus.setTextColor(Color.parseColor("#D32F2F")); // Red
+                holder.tvOrderStatus.setTextColor(Color.parseColor("#D32F2F"));
                 break;
             default:
                 holder.tvOrderStatus.setText(status);
@@ -83,12 +86,26 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         holder.tvOrderTotal.setText(formatter.format(order.getTotalAmount()) + "đ");
 
+        // Format and display Order Date
+        if (order.getCreatedAt() != null) {
+            try {
+                // Assuming Supabase timestamp format: 2024-06-04T01:23:54.123456+00:00
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+                inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date date = inputFormat.parse(order.getCreatedAt());
+                
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                holder.tvOrderDate.setText(outputFormat.format(date));
+            } catch (Exception e) {
+                holder.tvOrderDate.setText(order.getCreatedAt());
+            }
+        }
+
         if (order.getItems() != null && !order.getItems().isEmpty()) {
             OrderItem firstItem = order.getItems().get(0);
             if (firstItem.getProduct() != null) {
                 holder.tvProductName.setText(firstItem.getProduct().getName());
                 
-                // Use price_at_purchase from OrderItem if available, else fallback to current product price
                 double displayPrice = firstItem.getPrice();
                 holder.tvProductPrice.setText(formatter.format(displayPrice) + "đ");
                 holder.tvProductQuantity.setText("x" + firstItem.getQuantity());
@@ -110,7 +127,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvShopName, tvOrderStatus, tvProductName, tvProductQuantity, tvProductPrice, tvOrderTotal;
+        TextView tvShopName, tvOrderStatus, tvProductName, tvProductQuantity, tvProductPrice, tvOrderTotal, tvOrderDate;
         ImageView ivProduct;
 
         public OrderViewHolder(@NonNull View itemView) {
@@ -121,6 +138,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             tvProductQuantity = itemView.findViewById(R.id.tvProductQuantity);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
             tvOrderTotal = itemView.findViewById(R.id.tvOrderTotal);
+            tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
             ivProduct = itemView.findViewById(R.id.ivProduct);
         }
     }

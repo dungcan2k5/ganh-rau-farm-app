@@ -99,29 +99,45 @@
             android:layout_marginTop="12dp"
             android:background="#EEEEEE" />
 
-        <!-- Order Total -->
-        <LinearLayout
+        <!-- Order Total & Date -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal"
             android:paddingVertical="12dp">
 
             <TextView
-                android:id="@+id/tvTotalLabel"
+                android:id="@+id/tvOrderDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tổng số tiền: " />
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/nav_inactive"
+                android:textSize="12sp"
+                tools:text="04/06/2026 01:23" />
 
-            <TextView
-                android:id="@+id/tvOrderTotal"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#E53935"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="0đ" />
-        </LinearLayout>
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvTotalLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tổng số tiền: " />
+
+                <TextView
+                    android:id="@+id/tvOrderTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#E53935"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="0đ" />
+            </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
