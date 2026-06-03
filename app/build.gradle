@@ -33,15 +33,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            applicationIdSuffix = ".debug"
-        }
-    }
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            outputFileName = "GanhRauFarm_Debug.apk"
-        }
-    }
     buildFeatures {
         viewBinding true
         buildConfig true
