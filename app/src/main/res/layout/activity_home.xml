@@ -189,19 +189,19 @@
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
+                android:layout_below="@id/searchContainer"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:text="Danh mục sản phẩm"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:layout_below="@id/searchContainer"/>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView1"
-                android:layout_width="match_parent"
-                android:layout_height="149dp"
+                android:layout_width="401dp"
+                android:layout_height="106dp"
                 android:layout_below="@id/textView1"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp" />
 
@@ -219,10 +219,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView2"
                 android:layout_width="match_parent"
-                android:layout_height="108dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/textView2"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp" />
 
             <TextView
@@ -239,9 +239,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView3"
                 android:layout_width="match_parent"
-                android:layout_height="290dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/textView3"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="5dp" />
 
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
