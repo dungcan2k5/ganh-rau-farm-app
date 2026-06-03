@@ -30,6 +30,18 @@ public class Product {
     @SerializedName("is_active")
     private boolean isActive;
 
+    @SerializedName("category")
+    private String category;
+
+    @SerializedName("shop_name")
+    private String shopName;
+
+    @SerializedName("rating")
+    private float rating;
+
+    @SerializedName("old_price")
+    private Double oldPrice;
+
     public int getId() { return id; }
     public int getCategoryId() { return categoryId; }
     public String getName() { return name; }
@@ -39,4 +51,8 @@ public class Product {
     public String getImageUrl() { return imageUrl; }
     public String getUnit() { return unit; }
     public boolean isActive() { return isActive; }
+    public String getCategory() { return category; }
+    public String getShopName() { return shopName; }
+    public float getRating() { return rating; }
+    public Double getOldPrice() { return oldPrice; }
 }
