@@ -73,9 +73,10 @@ public class ProductDetailActivity extends AppCompatActivity {
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(binding.ivProductLarge);
 
-        // Click listeners cho các nút chức năng (Placeholder)
+        // Click listeners cho các nút chức năng
         binding.btnAddToCartDetail.setOnClickListener(v -> {
-            Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            CartManager.getInstance(this).addItem(product);
+            Toast.makeText(this, "Đã thêm " + product.getName() + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
         });
 
         binding.btnBuyNow.setOnClickListener(v -> {

@@ -21,9 +21,19 @@ import java.util.Locale;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
     private List<Product> products;
+    private OnAddToCartClickListener onAddToCartClickListener;
+
+    public interface OnAddToCartClickListener {
+        void onAddToCartClick(Product product);
+    }
 
     public ProductAdapter(List<Product> products) {
         this.products = products;
+    }
+
+    public ProductAdapter(List<Product> products, OnAddToCartClickListener listener) {
+        this.products = products;
+        this.onAddToCartClickListener = listener;
     }
 
     @NonNull
@@ -51,6 +61,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             intent.putExtra("PRODUCT_ID", product.getId());
             v.getContext().startActivity(intent);
         });
+
+        holder.btnAdd.setOnClickListener(v -> {
+            if (onAddToCartClickListener != null) {
+                onAddToCartClickListener.onAddToCartClick(product);
+            }
+        });
     }
 
     @Override
@@ -59,7 +75,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivImage;
+        ImageView ivImage, btnAdd;
         TextView tvName, tvPrice;
 
         public ViewHolder(@NonNull View itemView) {
@@ -67,6 +83,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             ivImage = itemView.findViewById(R.id.imageProduct);
             tvName = itemView.findViewById(R.id.textProduct);
             tvPrice = itemView.findViewById(R.id.textProduct1);
+            btnAdd = itemView.findViewById(R.id.imageProduct1);
         }
     }
 }

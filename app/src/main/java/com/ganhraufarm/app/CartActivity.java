@@ -35,9 +35,10 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartU
         setContentView(R.layout.activity_cart);
 
         initViews();
-        loadDummyData();
+        cartList = CartManager.getInstance(this).getCartList();
         setupRecyclerView();
         updateBottomBar();
+        checkEmptyState();
     }
 
     private void initViews() {
@@ -51,14 +52,12 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartU
         findViewById(R.id.btnShopNow).setOnClickListener(v -> finish());
         
         btnOrderNow.setOnClickListener(v -> {
-            startActivity(new Intent(this, CheckoutActivity.class));
+            if (CartManager.getInstance(this).getSelectedCount() > 0) {
+                startActivity(new Intent(this, CheckoutActivity.class));
+            } else {
+                Toast.makeText(this, "Vui lòng chọn sản phẩm để đặt hàng", Toast.LENGTH_SHORT).show();
+            }
         });
-    }
-
-    private void loadDummyData() {
-        cartList = new ArrayList<>();
-        // Add a dummy item to match the screenshot
-        cartList.add(new CartItem("1", "p1", "Xúc xích hong khói Đức Việt gói 450gr", 69900, 1, ""));
     }
 
     private void setupRecyclerView() {
@@ -69,38 +68,36 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartU
 
     @Override
     public void onQuantityChanged(int position, int newQuantity) {
-        cartList.get(position).setQuantity(newQuantity);
+        CartManager.getInstance(this).updateQuantity(position, newQuantity);
         adapter.notifyItemChanged(position);
         updateBottomBar();
     }
 
     @Override
     public void onSelectionChanged() {
+        CartManager.getInstance(this).saveCart();
         updateBottomBar();
     }
 
     @Override
     public void onDeleteItem(int position) {
-        cartList.remove(position);
+        CartManager.getInstance(this).removeItem(position);
         adapter.notifyItemRemoved(position);
+        // Important: notifyItemRangeChanged to update positions for following items if needed
+        adapter.notifyItemRangeChanged(position, cartList.size());
         updateBottomBar();
         checkEmptyState();
     }
 
     private void updateBottomBar() {
-        long total = 0;
-        int selectedCount = 0;
-        for (CartItem item : cartList) {
-            if (item.isSelected()) {
-                total += item.getPrice() * item.getQuantity();
-                selectedCount++;
-            }
-        }
+        long total = CartManager.getInstance(this).getTotalPrice();
+        int selectedCount = CartManager.getInstance(this).getSelectedCount();
 
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         tvTotalPrice.setText(formatter.format(total) + "đ");
         btnOrderNow.setText("Đặt mua (" + selectedCount + ")");
     }
+
 
     private void checkEmptyState() {
         if (cartList.isEmpty()) {

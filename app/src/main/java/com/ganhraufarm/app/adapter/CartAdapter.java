@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.ganhraufarm.app.R;
 import com.ganhraufarm.app.model.CartItem;
 
@@ -51,6 +52,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         
         holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
         holder.cbSelect.setChecked(item.isSelected());
+
+        Glide.with(holder.itemView.getContext())
+                .load(item.getImageUrl())
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(holder.ivProduct);
 
         holder.btnPlus.setOnClickListener(v -> listener.onQuantityChanged(position, item.getQuantity() + 1));
         holder.btnMinus.setOnClickListener(v -> {

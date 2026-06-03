@@ -112,7 +112,11 @@ public class HomeActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<List<Product>> call, @NonNull Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "Products fetched: " + response.body().size());
-                    binding.recyclerView3.setAdapter(new ProductAdapter(response.body()));
+                    binding.recyclerView3.setAdapter(new ProductAdapter(response.body(), product -> {
+                        CartManager.getInstance(HomeActivity.this).addItem(product);
+                        Toast.makeText(HomeActivity.this, "Đã thêm " + product.getName() + " vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        updateCartTotal();
+                    }));
                 } else if (response.code() == 401) {
                     handleLogout();
                 } else {
@@ -142,6 +146,18 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(HomeActivity.this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateCartTotal();
+    }
+
+    private void updateCartTotal() {
+        long total = CartManager.getInstance(this).getTotalPrice();
+        java.text.NumberFormat formatter = java.text.NumberFormat.getInstance(new java.util.Locale("vi", "VN"));
+        binding.tvHomeCartTotal.setText(formatter.format(total) + "đ");
     }
 
     private void handleLogout() {
