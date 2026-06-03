@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./dungcan2k5/ganh-rau-farm-app/ganh-rau-farm-app-dev
 
     steps:
       - name: Checkout code
@@ -18,10 +21,9 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+      - name: Grant execute permission
+        run: chmod +x gradlew
 
-      # Build và đổi tên file trực tiếp thông qua thuộc tính của Gradle
       - name: Build with Gradle
         run: ./gradlew assembleDebug -Pandroid.injected.output.file.name=GanhRauFarm_Debug.apk
 
