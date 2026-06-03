@@ -24,11 +24,12 @@ jobs:
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug -Pandroid.injected.output.file.name=GanhRauFarm_Debug.apk
-
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+      
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GanhRauFarm-APK-Artifact
-          path: app/build/outputs/apk/debug/GanhRauFarm_Debug.apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: warn
