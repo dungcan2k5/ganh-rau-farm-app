@@ -9,7 +9,7 @@
     <!-- Header -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="75dp"
         android:background="@color/white"
         android:elevation="2dp">
 
@@ -17,7 +17,7 @@
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="24dp"
             android:padding="12dp"
             app:srcCompat="@android:drawable/ic_menu_revert"
             app:tint="@color/black" />
@@ -25,7 +25,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="37dp"
             android:text="Tài khoản của tôi"
             android:textColor="@color/black"
             android:textSize="18sp"
